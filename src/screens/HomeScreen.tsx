@@ -9,9 +9,11 @@ import {
   Alert,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useTheme } from "../theme/ThemeProvider";
 import * as ImagePicker from "expo-image-picker";
 
 const HomeScreen = () => {
+  const theme = useTheme();
   const [daysTogether, setDaysTogether] = useState(0);
   const [images, setImages] = useState<string[]>([]);
 
@@ -49,73 +51,156 @@ const HomeScreen = () => {
     }
   };
 
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: theme.colors.background.primary,
+    },
+    content: {
+      padding: theme.spacing.md,
+      alignItems: "center",
+      backgroundColor: "#c0c0c0",
+      position: "relative",
+    },
+    filmStripContainer: {
+      flex: 1,
+      width: "100%",
+      backgroundColor: "#c0c0c0",
+      position: "relative",
+    },
+    filmStripBackground: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "#c0c0c0",
+    },
+    filmHoles: {
+      position: "absolute",
+      top: 0,
+      bottom: 0,
+      width: 20,
+      backgroundColor: "transparent",
+    },
+    filmHolesLeft: {
+      left: 0,
+    },
+    filmHolesRight: {
+      right: 0,
+    },
+    filmHole: {
+      width: 12,
+      height: 15,
+      borderRadius: 1,
+      backgroundColor: "#000000",
+      marginVertical: 6,
+      marginHorizontal: 4,
+    },
+    filmContentArea: {
+      marginHorizontal: 30,
+      paddingVertical: theme.spacing.md,
+      alignItems: "center",
+      backgroundColor: "#000000",
+    },
+    filmStrip: {
+      marginHorizontal: 30,
+      backgroundColor: "#000000",
+    },
+    topStrip: {
+      height: "10%",
+      justifyContent: "center",
+      alignItems: "center",
+      marginBottom: 4,
+    },
+    currentStrip: {
+      height: "80%",
+      paddingVertical: theme.spacing.md,
+      marginVertical: 2,
+    },
+    bottomStrip: {
+      height: "10%",
+      justifyContent: "center",
+      alignItems: "center",
+      marginTop: 4,
+    },
+    stripLabel: {
+      color: "#666666",
+      fontSize: theme.typography.sizes.sm,
+      fontStyle: "italic",
+    },
+    noContentText: {
+      fontSize: theme.typography.sizes.md,
+      color: theme.colors.text.secondary,
+      marginTop: theme.spacing.lg,
+    },
+    image: {
+      width: "100%",
+      height: 200,
+      marginBottom: theme.spacing.md,
+      borderRadius: theme.borderRadius.md,
+    },
+    addButton: {
+      position: "absolute",
+      bottom: theme.spacing.lg,
+      right: theme.spacing.lg,
+    },
+  });
+
   return (
     <View style={styles.container}>
-      {/* Top Bar */}
-      <View style={styles.topBar}>
-        <Ionicons name="man" size={32} color="blue" />
-        <Text style={styles.daysText}>Together {daysTogether} Days</Text>
-        <Ionicons name="woman" size={32} color="pink" />
-      </View>
+      {/* Main Content - Film Strip Background */}
+      <View style={styles.filmStripContainer}>
+        <View style={styles.filmStripBackground} />
 
-      {/* Main Content - Scrollable area for images/reminders */}
-      <ScrollView contentContainerStyle={styles.content}>
-        {images.length === 0 ? (
-          <Text style={styles.noContentText}>
-            No photos yet. Add some memories!
-          </Text>
-        ) : (
-          images.map((uri, index) => (
-            <Image key={index} source={{ uri }} style={styles.image} />
-          ))
-        )}
-      </ScrollView>
+        {/* Film holes on the left */}
+        <View style={[styles.filmHoles, styles.filmHolesLeft]}>
+          {Array.from({ length: 50 }, (_, i) => (
+            <View key={`left-${i}`} style={styles.filmHole} />
+          ))}
+        </View>
+
+        {/* Film holes on the right */}
+        <View style={[styles.filmHoles, styles.filmHolesRight]}>
+          {Array.from({ length: 50 }, (_, i) => (
+            <View key={`right-${i}`} style={styles.filmHole} />
+          ))}
+        </View>
+
+        {/* Top Strip - Previous */}
+        <View style={[styles.filmStrip, styles.topStrip]}>
+          <Text style={styles.stripLabel}>Previous memories...</Text>
+        </View>
+
+        {/* Current Strip - Main content */}
+        <ScrollView style={[styles.filmStrip, styles.currentStrip]} contentContainerStyle={{ alignItems: "center" }}>
+          {images.length === 0 ? (
+            <Text style={[styles.noContentText, { color: "#ffffff" }]}>
+              No photos yet. Add some memories!
+            </Text>
+          ) : (
+            images.map((uri, index) => (
+              <Image key={index} source={{ uri }} style={styles.image} />
+            ))
+          )}
+        </ScrollView>
+
+        {/* Bottom Strip - Next */}
+        <View style={[styles.filmStrip, styles.bottomStrip]}>
+          <Text style={styles.stripLabel}>Next strip...</Text>
+        </View>
+      </View>
 
       {/* Add Button at Bottom Right (above nav bar) */}
       <TouchableOpacity style={styles.addButton} onPress={addImage}>
-        <Ionicons name="add-circle" size={50} color="blue" />
+        <Ionicons
+          name="add-circle"
+          size={50}
+          color={theme.colors.accent.main}
+        />
       </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-  },
-  topBar: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
-  },
-  daysText: {
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  content: {
-    padding: 16,
-    alignItems: "center",
-  },
-  noContentText: {
-    fontSize: 16,
-    color: "gray",
-    marginTop: 20,
-  },
-  image: {
-    width: "100%",
-    height: 200,
-    marginBottom: 16,
-    borderRadius: 8,
-  },
-  addButton: {
-    position: "absolute",
-    bottom: 20,
-    right: 20,
-  },
-});
 
 export default HomeScreen;

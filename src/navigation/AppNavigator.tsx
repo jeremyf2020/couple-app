@@ -35,6 +35,8 @@ const AppNavigator = () => {
           },
           tabBarActiveTintColor: "blue", // Color for active tab
           tabBarInactiveTintColor: "gray", // Color for inactive
+          tabBarShowLabel: false, // Hide tab labels
+          headerShown: false, // Hide screen headers
         })}
       >
         <Tab.Screen name="Home" component={HomeScreen} />
