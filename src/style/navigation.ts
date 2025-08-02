@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import { colors, spacing, typography, dimensions } from "./theme";
 
 export const navigationStyles = StyleSheet.create({
@@ -17,7 +17,7 @@ export const navigationStyles = StyleSheet.create({
     paddingVertical: spacing.sm,
     paddingHorizontal: spacing.xs,
     height: dimensions.tabBarHeight,
-    paddingBottom: spacing.lg,
+    paddingBottom: Platform.OS === 'web' ? spacing.sm : spacing.lg,
   },
   tab: {
     flex: 1,
