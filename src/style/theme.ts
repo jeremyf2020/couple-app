@@ -22,6 +22,16 @@ export const spacing = {
   md: 16,
   lg: 24,
   xl: 32,
+  xxl: 40,
+  xxxl: 48,
+};
+
+export const margins = {
+  xs: 2,
+  sm: 4,
+  md: 8,
+  lg: 12,
+  xl: 16,
 };
 
 export const dimensions = {
@@ -29,6 +39,10 @@ export const dimensions = {
   screenHeight,
   tabBarHeight: 60,
   headerHeight: 44,
+};
+
+export const animations = {
+  editModeScale: 0.8,
 };
 
 export const typography = {
@@ -95,6 +109,16 @@ export const commonStyles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 16,
   },
+  circleButton: {
+    backgroundColor: colors.primary,
+    borderRadius: spacing.xl,
+    width: spacing.xxl,
+    height: spacing.xxl,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: spacing.sm,
+  },
+
   input: {
     borderWidth: 1,
     borderColor: colors.border,
