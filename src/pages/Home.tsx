@@ -1,65 +1,163 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
-import { typography } from '../style/theme';
-import { homeStyles } from '../style/home';
+import React, { useState, useRef } from "react";
+import { View, TouchableOpacity, SafeAreaView, Animated } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { colors } from "../style/theme";
+import { homeStyles } from "../style/home";
 
-type ViewMode = 'default' | 'editMode';
+import Toolbox from "../components/Toolbox";
+import CurrentFilm from "../components/CurrentFilm";
+import PreviousFilm from "../components/PreviousFilm";
+import NextFilm from "../components/NextFilm";
+import FilmStripHoles from "../components/FilmStripHoles";
+
+type ViewMode = "default" | "editMode";
 
 export default function Home() {
-  const [mode, setMode] = useState<ViewMode>('default');
+  const [mode, setMode] = useState<ViewMode>("default");
+  const scaleAnim = useRef(new Animated.Value(1)).current;
+  const toolboxAnim = useRef(new Animated.Value(0)).current;
+  const filmAreaAnim = useRef(new Animated.Value(0)).current;
+  const positionAnim = useRef(new Animated.Value(0)).current;
 
   const toggleMode = () => {
-    setMode(mode === 'default' ? 'editMode' : 'default');
-  };
+    const newMode = mode === "default" ? "editMode" : "default";
 
-  const renderFilmHoles = () => {
-    const holes = [];
-    for (let i = 0; i < 30; i++) {
-      holes.push(<View key={i} style={homeStyles.filmHole} />);
+    if (newMode === "editMode") {
+      // Animate to edit mode
+      Animated.parallel([
+        Animated.timing(scaleAnim, {
+          toValue: 0.9,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(toolboxAnim, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(filmAreaAnim, {
+          toValue: 1,
+          duration: 600,
+          useNativeDriver: true,
+        }),
+        Animated.timing(positionAnim, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start();
+    } else {
+      // Animate to default mode
+      Animated.parallel([
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+        Animated.timing(toolboxAnim, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }),
+        Animated.timing(filmAreaAnim, {
+          toValue: 0,
+          duration: 400,
+          useNativeDriver: true,
+        }),
+        Animated.timing(positionAnim, {
+          toValue: 0,
+          duration: 500,
+          useNativeDriver: true,
+        }),
+      ]).start();
     }
-    return holes;
+
+    setMode(newMode);
   };
 
-  if (mode === 'editMode') {
-    return (
-      <SafeAreaView style={homeStyles.filmStripMode}>
-        <TouchableOpacity style={homeStyles.modeToggle} onPress={toggleMode}>
-          <Text style={homeStyles.modeToggleText}>Default</Text>
-        </TouchableOpacity>
-        
-        <View style={homeStyles.filmStripContainer}>
-          <View style={homeStyles.filmHoles}>
-            {renderFilmHoles()}
-          </View>
-          <View style={homeStyles.filmHolesRight}>
-            {renderFilmHoles()}
-          </View>
-          <View style={homeStyles.filmStripBorder} />
-          <View style={homeStyles.filmStripBorderBottom} />
-          
-          <View style={homeStyles.filmContent}>
-            <Text style={typography.title}>Home</Text>
-            <Text style={typography.body}>Welcome to your couple app!</Text>
-            <Text style={[typography.caption, { marginTop: 20, textAlign: 'center' }]}>
-              Edit Mode - Capture your memories together
-            </Text>
-          </View>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  const handleAddNewFilm = () => {
+    // Handle adding new film logic
+    console.log("Add new film");
+  };
+
+  const handleFilmStripSlider = () => {
+    // Handle film strip slider logic
+    console.log("Film strip slider pressed");
+  };
 
   return (
-    <SafeAreaView style={homeStyles.backgroundMode}>
-      <TouchableOpacity style={homeStyles.modeToggle} onPress={toggleMode}>
-        <Text style={homeStyles.modeToggleText}>Edit Mode</Text>
-      </TouchableOpacity>
-      
-      <Text style={[typography.title, homeStyles.lightText]}>Home</Text>
-      <Text style={[typography.body, homeStyles.lightText]}>Welcome to your couple app!</Text>
-      <Text style={[typography.caption, homeStyles.lightText, { marginTop: 20, textAlign: 'center' }]}>
-        Default Mode - Your shared space
-      </Text>
+    <SafeAreaView style={homeStyles.container}>
+      <View
+        style={{
+          flex: 1,
+          flexDirection: mode === "editMode" ? "row" : "column",
+        }}
+      >
+        {/* Toolbox Component */}
+        <Toolbox
+          onToggleMode={toggleMode}
+          toolboxAnim={toolboxAnim}
+          isVisible={mode === "editMode"}
+        />
+
+        {/* Main Content Area */}
+        <Animated.View
+          style={[
+            { flex: 1 },
+            {
+              backgroundColor: positionAnim.interpolate({
+                inputRange: [0, 1],
+                outputRange: ["#000000", "#C0C0C0"],
+              }),
+            },
+          ]}
+        >
+          {/* Previous Film Component */}
+          <PreviousFilm
+            filmAreaAnim={filmAreaAnim}
+            isVisible={mode === "editMode"}
+          />
+
+          {/* Central Content Area */}
+          <View
+            style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+          >
+            {/* Film Strip Holes Components */}
+            <FilmStripHoles
+              filmAreaAnim={filmAreaAnim}
+              isVisible={mode === "editMode"}
+              side="left"
+            />
+
+            <FilmStripHoles
+              filmAreaAnim={filmAreaAnim}
+              isVisible={mode === "editMode"}
+              side="right"
+              onPress={handleFilmStripSlider}
+            />
+
+            {/* Current Film Component */}
+            <CurrentFilm
+              scaleAnim={scaleAnim}
+              isEditMode={mode === "editMode"}
+            />
+          </View>
+
+          {/* Next Film Component */}
+          <NextFilm
+            filmAreaAnim={filmAreaAnim}
+            isVisible={mode === "editMode"}
+            onAddNewFilm={handleAddNewFilm}
+          />
+        </Animated.View>
+
+        {/* Mode Toggle Button - only visible in default mode */}
+        {mode === "default" && (
+          <TouchableOpacity style={homeStyles.modeToggle} onPress={toggleMode}>
+            <Ionicons name="create" size={18} color={colors.background} />
+          </TouchableOpacity>
+        )}
+      </View>
     </SafeAreaView>
   );
 }

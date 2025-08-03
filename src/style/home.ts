@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
 import { colors, spacing, dimensions } from "./theme";
 
+const { screenWidth, screenHeight } = dimensions;
+
 export const homeStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -13,62 +15,95 @@ export const homeStyles = StyleSheet.create({
     padding: spacing.md,
     backgroundColor: "#000000",
   },
-  filmStripMode: {
+  editMode: {
     flex: 1,
-    backgroundColor: "#1a1a1a",
+    backgroundColor: "#C0C0C0",
+    flexDirection: "row",
+  },
+  leftToolbox: {
+    width: screenWidth * 0.15,
+    backgroundColor: "#A0A0A0",
+    paddingVertical: spacing.md,
+    alignItems: "center",
+  },
+  toolboxButton: {
+    width: 60,
+    height: 60,
+    backgroundColor: colors.primary,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center",
+    marginVertical: spacing.sm,
+  },
+  mainEditArea: {
+    flex: 1,
     position: "relative",
   },
-  filmStripContainer: {
+  topFilmArea: {
+    height: screenHeight * 0.08,
+    backgroundColor: "#B0B0B0",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  bottomFilmArea: {
+    height: screenHeight * 0.08,
+    backgroundColor: "#B0B0B0",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  centralArea: {
     flex: 1,
-    backgroundColor: "#2a2a2a",
-    marginHorizontal: spacing.lg,
-    marginVertical: spacing.xl,
-    borderRadius: 12,
-    overflow: "hidden",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     position: "relative",
   },
-  filmHoles: {
-    position: "absolute",
-    left: 0,
-    top: 0,
-    bottom: 0,
-    width: 20,
-    backgroundColor: "#1a1a1a",
-    zIndex: 2,
+  leftFilmStrip: {
+    width: screenWidth * 0.08,
+    backgroundColor: "#C0C0C0",
+    alignItems: "center",
+    paddingVertical: spacing.xs,
   },
-  filmHolesRight: {
-    position: "absolute",
-    right: 0,
-    top: 0,
-    bottom: 0,
-    width: 20,
-    backgroundColor: "#1a1a1a",
-    zIndex: 2,
+  rightFilmStrip: {
+    width: screenWidth * 0.08,
+    backgroundColor: "#C0C0C0",
+    alignItems: "center",
+    paddingVertical: spacing.xs,
   },
   filmHole: {
     width: 8,
     height: 12,
     backgroundColor: "#000000",
-    marginLeft: 6,
-    marginVertical: 8,
+    marginVertical: spacing.xs,
     borderRadius: 2,
   },
-  filmContent: {
+  scaledDefaultMode: {
+    width: screenWidth * 0.69, // Available width after toolbox and film strips
+    height: (screenHeight - (screenHeight * 0.16)) * 0.8, // Available height (minus top/bottom areas) * scale
+    backgroundColor: "#000000",
+    borderRadius: spacing.sm,
+    overflow: "hidden",
+    alignSelf: "center",
+    justifyContent: "center",
+  },
+  scaledContent: {
     flex: 1,
-    backgroundColor: "#f5f5f5",
-    marginHorizontal: 20,
     alignItems: "center",
     justifyContent: "center",
-    padding: spacing.lg,
+    padding: spacing.md,
+    width: "100%",
+    height: "100%",
   },
   modeToggle: {
     position: "absolute",
-    bottom: 20,
-    right: 20,
+    bottom: spacing.lg,
+    right: spacing.lg,
     backgroundColor: colors.primary,
-    paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
-    borderRadius: 20,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: "center",
+    justifyContent: "center",
     zIndex: 10,
   },
   modeToggleText: {
