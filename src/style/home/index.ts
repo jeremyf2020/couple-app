@@ -12,6 +12,15 @@ export const homeStyles = StyleSheet.create({
     right: spacing.md,
     margin: spacing.sm,
   },
+  uploadedImage: {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    width: dimensions.screenWidth * 0.25,
+    height: dimensions.screenWidth * 0.25,
+    marginTop: -(dimensions.screenWidth * 0.25) / 2,
+    marginLeft: -(dimensions.screenWidth * 0.25) / 2,
+  },
 
   // backgroundMode: {
   //   flex: 1,

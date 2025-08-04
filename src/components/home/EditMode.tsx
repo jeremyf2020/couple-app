@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { View, Animated } from "react-native";
 import { CurrentFilm } from "./CurrentFilm";
 import { AnimatedFilm } from "./AnimatedFilm";
+import { Toolbox } from "./Toolbox";
 import { editModeStyles } from "../../style/home/editMode";
 
 interface EditModeProps {
@@ -9,6 +10,12 @@ interface EditModeProps {
   scaleAnim: Animated.Value;
   translateAnim: Animated.Value;
   animateDuration: number;
+  onImageUpload: (uri: string) => void;
+  filmItems: any[];
+  selectedItemId: string | null;
+  onSelectItem: (itemId: string) => void;
+  onUpdateItemTransform: (itemId: string, transform: any) => void;
+  onSave?: () => void;
 }
 
 export const EditMode = ({
@@ -16,6 +23,12 @@ export const EditMode = ({
   scaleAnim,
   translateAnim,
   animateDuration,
+  onImageUpload,
+  filmItems,
+  selectedItemId,
+  onSelectItem,
+  onUpdateItemTransform,
+  onSave,
 }: EditModeProps) => {
   const toolboxOpacity = useRef(new Animated.Value(0)).current;
 
@@ -34,12 +47,17 @@ export const EditMode = ({
 
   return (
     <>
-      <Animated.View
-        style={[editModeStyles.toolbox, { opacity: toolboxOpacity }]}
-      ></Animated.View>
+      <Toolbox opacity={toolboxOpacity} onImageUpload={onImageUpload} onSave={onSave} />
       <View style={editModeStyles.filmContainer}>
         <AnimatedFilm scaleAnim={scaleAnim} translateAnim={translateAnim}>
-          <CurrentFilm toggleEditMode={toggleEditMode} isEditMode={true} />
+          <CurrentFilm 
+            toggleEditMode={toggleEditMode} 
+            isEditMode={true}
+            filmItems={filmItems}
+            selectedItemId={selectedItemId}
+            onSelectItem={onSelectItem}
+            onUpdateItemTransform={onUpdateItemTransform}
+          />
         </AnimatedFilm>
       </View>
     </>
